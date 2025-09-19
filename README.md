@@ -1,7 +1,7 @@
 
 # GAM Trajectories (mgcv)
 
-**Author:** Dr. Adyasha Tejaswi Khuntia  
+**Author:** Adyasha Tejaswi Khuntia  
 **Date:** 19 Sep 2025  
 **R version:** ≥ 4.1  
 **Key packages:** `mgcv`, `ggplot2`, `dplyr`, `tidyr`, `readxl`, `patchwork`, `writexl`, `readr`
