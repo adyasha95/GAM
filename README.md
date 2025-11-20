@@ -1,60 +1,107 @@
+# Clinical Biostatistics Modeling  
+Survival Analysis • Cox Models • Generalized Additive Models (GAM)
 
-# GAM Trajectories (mgcv)
+This repository contains modular R scripts for core biostatistical workflows used in clinical and biomedical research.  
+The code demonstrates reproducible methods for **time-to-event analysis**, **hazard modeling**, and **nonlinear effect estimation** using **Generalized Additive Models (GAM)**.
 
-**Author:** Adyasha Tejaswi Khuntia  
-**Date:** 19 Sep 2025  
-**R version:** ≥ 4.1  
-**Key packages:** `mgcv`, `ggplot2`, `dplyr`, `tidyr`, `readxl`, `patchwork`, `writexl`, `readr`
-
----
-
-## 📌 Overview
-
-This project fits **four Generalized Additive Models (GAMs)** using `mgcv::bam()` and generates **population-level predicted trajectories** (with 95% CIs) for cognitive and functional outcomes over time, by risk class. Plots are formatted to match the provided client reference figures.
-
-### Responses
-- **mPACC** → `zscore` (Gaussian)
-- **MMSE** → `mlm` (Binomial logit, scaled to 0–30)
-- **MEM** → `m_score_std` (Standardized version of `m_score`)
-- **EXEC** → `func_score` (Gaussian)
+> **Important:**  
+> These scripts were originally developed as part of projects using **sensitive biomedical datasets** (clinical imaging, psychiatric cohort data, or patient-level outcomes).  
+> **Due to GDPR and data-sharing restrictions, the original datasets cannot be made public.**  
+>  
+> The versions provided here include **generic, synthetic, or user-replaceable data-loading placeholders**, ensuring the methods are reproducible without exposing confidential data.
 
 ---
 
-## 📂 Data Requirements
+## 📦 Repository Contents
 
-Input file: **`cdf.xlsx`** with the following columns (exact names expected):
+### 1. `survival_analysis_v2.R`
+A complete time-to-event modeling pipeline using R.
 
-- **Outcomes**: `zscore`, `mlm`, `m_score`, `func_score`  
-- **Predictors**: `class`, `gender`, `age_at_base`, `ap4`, `yr_educ`  
-- **Time**: `yrs_from_base` (numeric or coercible to numeric)  
-- **Random effect**: `patient` (subject ID)
+**Includes:**
+- Kaplan–Meier estimator  
+- Log-rank test  
+- Cox proportional hazards model (univariate + multivariate)  
+- Hazard ratio extraction and visualization  
+- Time-to-event prediction workflow  
+- Clean separation of loading, modeling, and plotting functions  
 
----
-
-## ⚙️ Model Specification
-
-For each response:
-- **Random effects:** patient-specific smooth.  
-- **Population-level predictions:** random effects excluded.  
-- **MMSE:** fit as `cbind(mlm, 30 - mlm)` with logit link; predictions inverse-linked and scaled to 0–30.
-
-### 🔎 About `invlink`
-- **Gaussian** → identity (η = y).  
-- **Binomial logit** → η = log(p/(1-p)); p = 1/(1+exp(-η)); then scaled as `p*30`.  
-- This restores predictions to the **original MMSE scale**.
-
-### 📊 MEM Standardization
-- `m_score` is standardized relative to the **baseline distribution** (per-patient minimum time).  
-- This yields `m_score_std`, so baseline ~0 and decline mirrors client figures.
+**Key Packages:**  
+`survival`, `survminer`, `dplyr`, `ggplot2`
 
 ---
 
-## 🛠️ Installation
+### 2. `code_GAM_v2.r`
+Script for fitting **Generalized Additive Models (GAM)** to clinical/biomedical variables.
 
-Install dependencies:
+**Includes:**
+- Model specification with nonlinear smooth terms  
+- Covariate adjustment  
+- Partial effect plots (smooth splines)  
+- Handling continuous and categorical predictors  
+- Clear model summary + interpretation outputs  
 
+**Key Packages:**  
+`mgcv`, `ggplot2`, `dplyr`
+
+---
+
+## 🧠 Why These Methods Matter in Biomedical Research
+
+### **Survival Analysis**
+Used for:
+- Clinical progression  
+- Hospitalization risk  
+- Transition prediction (e.g., CHR → psychosis)  
+- Treatment response duration  
+- Risk factor modeling  
+
+Provides:
+- Hazard ratios  
+- Time-dependent probabilities  
+- Survival curves  
+- Clinically interpretable risk profiles  
+
+---
+
+### **Generalized Additive Models (GAM)**
+Used for:
+- Nonlinear biomarker–outcome relationships  
+- Brain/clinical covariate effects  
+- Age effects with nonlinearity  
+- Modeling without unrealistic linear assumptions  
+
+GAMs are especially helpful in:
+- Neuroimaging  
+- Clinical psychiatry  
+- Biomarker discovery  
+- Developmental and lifespan modeling  
+
+---
+
+## 🔐 Data Privacy & Compliance Notice
+
+This repository includes **code only**, not data.  
+The original analyses were performed on **GDPR-protected biomedical datasets**, including patient-level clinical, imaging, or questionnaire data.
+
+To comply with:
+- **GDPR** (EU)  
+- **Institutional Ethics approvals**  
+- **Data sharing agreements**  
+
+➡️ **No raw data or identifiable variables can be shared.**
+
+All current examples are built to work with:
+- synthetic data  
+- user-provided datasets  
+- de-identified tables  
+
+You may adapt the scripts to your own dataset structure.
+
+---
+
+## ▶️ How to Use
+
+### **1. Install dependencies**
 ```r
-install.packages(c(
-  "mgcv", "ggplot2", "dplyr", "tidyr", "readxl", 
-  "patchwork", "writexl", "readr"
-), repos = "https://cloud.r-project.org")
+install.packages(c("survival", "survminer", "mgcv", "ggplot2", "dplyr"))
+---
